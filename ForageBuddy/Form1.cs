@@ -13,35 +13,37 @@ namespace ForageBuddy
 {
     public partial class Form1 : Form
     {
-        private string folderPath;
-        private List<string> filesInScreenshotDirectory;
-        private Dictionary<string, PlayerScore> PlayerScores;
+        private string _folderPath;
+        private List<string> _filesInScreenshotDirectory;
+        private Dictionary<string, PlayerScore> _playerScores;
 
-        private ImageParser imageParser;
+        private readonly ImageParser _imageParser;
 
         public Form1()
         {
-            imageParser = new ImageParser();
+            _imageParser = new ImageParser();
             InitializeComponent();
 
         }
 
         private void btnFolderSelect_Click(object sender, EventArgs e)
         {
+            // TODO: Gracefully show if the client is connected properly.
+
             if (fbdScreenieFolder.ShowDialog() == DialogResult.OK)
             {
                 Console.WriteLine(fbdScreenieFolder.SelectedPath);
-                folderPath = fbdScreenieFolder.SelectedPath;
-                filesInScreenshotDirectory = GetPngFiles();
+                _folderPath = fbdScreenieFolder.SelectedPath;
+                _filesInScreenshotDirectory = GetPngFiles();
             }
         }
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             lbScores.Items.Clear();
-            PlayerScores = new Dictionary<string, PlayerScore>();
+            _playerScores = new Dictionary<string, PlayerScore>();
 
-            if (folderPath == null) return;
+            if (_folderPath == null) return;
 
             var allFilesInOutputDir = GetPngFiles();
 
@@ -49,25 +51,25 @@ namespace ForageBuddy
 
             foreach (var file in allFilesInOutputDir)
             {
-                if (filesInScreenshotDirectory.Contains(file))
+                if (_filesInScreenshotDirectory.Contains(file))
                 {
                     Console.WriteLine($"File {file} already found. Continuing.");
                     continue;
                 }
 
-                tmpPlayerScores.AddRange(imageParser.GetPlayerScoresInImage(file));
+                tmpPlayerScores.AddRange(_imageParser.GetPlayerScoresInImage(file));
             }
 
             foreach (var score in tmpPlayerScores)
             {
-                if (!PlayerScores.ContainsKey(score.GetPlayerName())) PlayerScores.Add(score.GetPlayerName(), score);
-                if (score.GetTotalScore() > PlayerScores[score.GetPlayerName()].GetTotalScore())
+                if (!_playerScores.ContainsKey(score.PlayerName)) _playerScores.Add(score.PlayerName, score);
+                if (score.TotalScore > _playerScores[score.PlayerName].TotalScore)
                 {
-                    PlayerScores[score.GetPlayerName()] = score;
+                    _playerScores[score.PlayerName] = score;
                 }
             }
 
-            foreach (var score in PlayerScores)
+            foreach (var score in _playerScores)
             {
                 lbScores.Items.Insert(0, score.Value.PlayerScoreString());
             }
@@ -75,26 +77,26 @@ namespace ForageBuddy
 
         private void btnCopyScores_Click(object sender, EventArgs e)
         {
-            if (PlayerScores == null) return;
+            if (_playerScores == null) return;
 
-            var output = string.Join("\n", PlayerScores.Values.Select(x => x.PlayerScoreString()));
+            var output = string.Join("\n", _playerScores.Values.Select(x => x.PlayerScoreString()));
 
             Clipboard.SetText(output);
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            if (folderPath == null) return;
+            if (_folderPath == null) return;
 
-            PlayerScores = null;
+            _playerScores = null;
             lbScores.Items.Clear();
-            filesInScreenshotDirectory = GetPngFiles();
+            _filesInScreenshotDirectory = GetPngFiles();
 
             // Resets the scores since the last forage. 
         }
 
         private List<string> GetPngFiles()
-        => Directory.EnumerateFiles(folderPath)
+        => Directory.EnumerateFiles(_folderPath)
             .ToList()
             .FindAll(x => x.Split('.').LastOrDefault() == "png");
     }

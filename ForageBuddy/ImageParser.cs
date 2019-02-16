@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -34,10 +35,13 @@ namespace ForageBuddy
         private readonly LockedBitmap _fetishJar = new LockedBitmap(Properties.Resources.FetishJar);
         private readonly LockedBitmap _boneBox = new LockedBitmap(Properties.Resources.BoneBox);
 
+        private List<ChestGrouping> chestGroups = new List<ChestGrouping>();
+
+        int maxHeight = 0;
+        int minHeight = 0; // TODO: Use this for bounding of the bottom of the Duty Report.
+
         public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile)
         {
-            var maxHeight = 0;
-            var minHeight = 0; // TODO: Use this for bounding of the bottom of the Duty Report.
 
             var usedBitmap = new Bitmap(pathToFile);
 
@@ -55,7 +59,7 @@ namespace ForageBuddy
 
 
             if (lockedBitmap.DoesImageExist(_bottomOfDutyReport))
-                minHeight = lockedBitmap.GetFirstLocation(_bottomOfDutyReport).Y; // TODO: Implement a sector to speed up the searches.
+                minHeight = lockedBitmap.GetFirstLocation(_bottomOfDutyReport).Y; // TODO: Implement a sector to speed up the searches, should remove redundant lookups also.
             else return new List<PlayerScore>();
 
             // TODO: Make all chest implement IChest or similar - it will allow the composite pattern to assign values.
@@ -65,88 +69,64 @@ namespace ForageBuddy
 
             lockedBitmap.UnlockBits();
 
-            var chestGroups = new List<ChestGroup>();
+            chestGroups = new List<ChestGrouping>();
 
-            foreach (var boneBox in boneBoxLocations)
+            foreach (var boneBoxLocation in boneBoxLocations)
             {
-                if (boneBox.Y < maxHeight) continue;
-
-                var matchingGroup = chestGroups.FirstOrDefault(x => x.TopLeft.Y < boneBox.Y + 30 && x.TopLeft.Y > boneBox.Y - 30);
-
-                if (matchingGroup != null)
-                {
-                    matchingGroup.BBs++;
-                    if (boneBox.Y < matchingGroup.TopLeft.Y) matchingGroup.TopLeft.Y = boneBox.Y;
-                    if (boneBox.X < matchingGroup.TopLeft.X) matchingGroup.TopLeft.X = boneBox.X;
-                }
-                else 
-                    chestGroups.Add(new ChestGroup(boneBox));
+                GroupChests(ChestType.BoneBox, boneBoxLocation);
             }
 
-            foreach (var fetishJar in fetishJarLocations)
+            foreach (var fetishJarLocation in fetishJarLocations)
             {
-                if (fetishJar.Y < maxHeight) continue;
-
-                var matchingGroup = chestGroups.FirstOrDefault(x => x.TopLeft.Y < fetishJar.Y + 30 && x.TopLeft.Y > fetishJar.Y - 30);
-
-                if (matchingGroup != null)
-                {
-                    matchingGroup.FJs++;
-                    if (fetishJar.Y < matchingGroup.TopLeft.Y) matchingGroup.TopLeft.Y = fetishJar.Y;
-                    if (fetishJar.X < matchingGroup.TopLeft.X) matchingGroup.TopLeft.X = fetishJar.X;
-                }
-                else
-                    chestGroups.Add(new ChestGroup(fetishJar));
+                GroupChests(ChestType.FetishJar, fetishJarLocation);
             }
 
-            foreach (var cursedChest in cursedChestLocations)
+            foreach (var cursedChestLocation in cursedChestLocations)
             {
-                if (cursedChest.Y < maxHeight) continue;
-
-                var matchingGroup = chestGroups.FirstOrDefault(x => x.TopLeft.Y < cursedChest.Y + 30 && x.TopLeft.Y > cursedChest.Y - 30);
-
-                if (matchingGroup != null)
-                {
-                    matchingGroup.CCs++;
-                    if (cursedChest.Y < matchingGroup.TopLeft.Y) matchingGroup.TopLeft.Y = cursedChest.Y;
-                    if (cursedChest.X < matchingGroup.TopLeft.X) matchingGroup.TopLeft.X = cursedChest.X;
-                }
-                else
-                    chestGroups.Add(new ChestGroup(cursedChest));
+                GroupChests(ChestType.CursedChest, cursedChestLocation);
             }
 
             var result = new List<PlayerScore>();
 
             foreach (var chestGroup in chestGroups)
             {
-                var scalar = 8;
+                const int scalar = 8;
 
-                var location = new Point(chestGroup.TopLeft.X + 8, chestGroup.TopLeft.Y - 45);
+                var location = new Point(chestGroup.GroupLocation.X + 8, chestGroup.GroupLocation.Y - 45);
 
                 var rect = new Rectangle(location, new Size(80,20));
 
                 var ocrImage = ResizeImage(usedBitmap.Clone(rect, usedBitmap.PixelFormat), rect.Width * scalar, rect.Height * scalar);
 
-                var name = GetTextFromBitmap(ocrImage);
+                var name = ReadNameFromImage(ocrImage);
 
-                result.Add(new PlayerScore(name, chestGroup.BBs, chestGroup.FJs, chestGroup.CCs));
+                ocrImage.Save(Path.Combine(@"C:\Users\Dan\Desktop\", $@"test_{name}.png"));
+
+                result.Add(new PlayerScore(name, chestGroup.BoneBox, chestGroup.FetishJar, chestGroup.CursedChest));
             }
 
             return result;
         }
 
-        string GetTextFromBitmap(Bitmap img)
+        private void GroupChests(ChestType chestType, Point chestLocation)
         {
-            // TODO: Figure out how to not have to create this multiple times.
-            var tesseractEngine = new TesseractEngine("./tessdata", "eng", EngineMode.Default)
-            {
-                DefaultPageSegMode = PageSegMode.SingleWord
-            };
+            if (chestLocation.Y < maxHeight) return;
 
-            var text = tesseractEngine.Process(img).GetText();
+            var matchingGroup = chestGroups.FirstOrDefault(x =>
+                x.GroupLocation.Y < chestLocation.Y + 30 && x.GroupLocation.Y > chestLocation.Y - 30);
 
-            return $"{text}";
+            if(matchingGroup != null)
+                matchingGroup.AddChest(chestType, chestLocation);
+            else
+                chestGroups.Add(new ChestGrouping(chestType, chestLocation));
         }
+
+
+        string ReadNameFromImage(Bitmap image)
+        =>  new TesseractEngine("./tessdata", "eng", EngineMode.Default) { DefaultPageSegMode = PageSegMode.SingleWord }
+            .Process(image)
+            .GetText()
+            .Replace("\n", "");
 
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
@@ -181,18 +161,43 @@ namespace ForageBuddy
         }
     }
 
-    // TODO: Get rid of this. 
-    class ChestGroup
+    enum ChestType
     {
-        public Point TopLeft;
+        BoneBox, FetishJar, CursedChest
+    }
 
-        public int CCs = 0;
-        public int FJs = 0;
-        public int BBs = 0;
+    class ChestGrouping
+    {
+        // All values in here can be read only. 
 
-        public ChestGroup(Point topLeft)
+        public Point GroupLocation;
+        public int CursedChest = 0;
+        public int FetishJar = 0;
+        public int BoneBox = 0;
+
+        public ChestGrouping(ChestType initialChest, Point groupLocation)
         {
-            this.TopLeft = topLeft;
+            this.GroupLocation = groupLocation;
+            this.AddChest(initialChest, groupLocation);
+        }
+
+        public void AddChest(ChestType typeOfChest, Point chestLocation)
+        {
+            switch (typeOfChest)
+            {
+                case ChestType.BoneBox:
+                    this.BoneBox++;
+                    break;
+                case ChestType.FetishJar:
+                    this.FetishJar++;
+                    break;
+                case ChestType.CursedChest:
+                    this.CursedChest++;
+                    break;
+            }
+
+            if (chestLocation.Y < this.GroupLocation.Y) this.GroupLocation.Y = chestLocation.Y;
+            if (chestLocation.X < this.GroupLocation.X) this.GroupLocation.X = chestLocation.X;
         }
     }
 }
