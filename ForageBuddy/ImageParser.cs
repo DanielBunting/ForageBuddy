@@ -90,18 +90,8 @@ namespace ForageBuddy
 
             foreach (var chestGroup in chestGroups)
             {
-                const int scalar = 8;
-
                 var location = new Point(chestGroup.GroupLocation.X + 8, chestGroup.GroupLocation.Y - 45);
-
-                var rect = new Rectangle(location, new Size(80,20));
-
-                var ocrImage = ResizeImage(usedBitmap.Clone(rect, usedBitmap.PixelFormat), rect.Width * scalar, rect.Height * scalar);
-
-                var name = ReadNameFromImage(ocrImage);
-
-                ocrImage.Save(Path.Combine(@"C:\Users\Dan\Desktop\", $@"test_{name}.png"));
-
+                var name = NameReader.ReadDutyReportName(usedBitmap.Clone(new Rectangle(location, new Size(80, 20)), usedBitmap.PixelFormat));
                 result.Add(new PlayerScore(name, chestGroup.BoneBox, chestGroup.FetishJar, chestGroup.CursedChest));
             }
 
@@ -120,13 +110,6 @@ namespace ForageBuddy
             else
                 chestGroups.Add(new ChestGrouping(chestType, chestLocation));
         }
-
-
-        string ReadNameFromImage(Bitmap image)
-        =>  new TesseractEngine("./tessdata", "eng", EngineMode.Default) { DefaultPageSegMode = PageSegMode.SingleWord }
-            .Process(image)
-            .GetText()
-            .Replace("\n", "");
 
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
