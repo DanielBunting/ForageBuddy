@@ -26,12 +26,12 @@ namespace ForageBuddy
 
         public string PlayerScoreString()
         {
-            return $"{PlayerName} - {(_totalOneChests*1) + (_totalTwoChests*2) + (_totalThreeChests*3)}.";
+            return $"{PlayerName} - {(_totalOneChests*1) + (_totalTwoChests*2) + (_totalThreeChests*3)}";
         }
 
         public string PlayerScoreStringBreakdown()
         {
-            return $"{PlayerName} - {_totalOneChests}, {_totalTwoChests}, {_totalThreeChests}.";
+            return $"{PlayerName} - {_totalOneChests}, {_totalTwoChests}, {_totalThreeChests}";
         }
     }
 }
