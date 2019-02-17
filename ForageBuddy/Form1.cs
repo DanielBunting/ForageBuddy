@@ -53,7 +53,7 @@ namespace ForageBuddy
             {
                 if (_filesInScreenshotDirectory.Contains(file))
                 {
-                    Console.WriteLine($"File {file} already found. Continuing.");
+                    Console.WriteLine($@"File {file} already found. Continuing.");
                     continue;
                 }
 
@@ -69,9 +69,11 @@ namespace ForageBuddy
                 }
             }
 
-            foreach (var score in _playerScores)
+            var orderedScores = _playerScores.Select(x => x.Value).OrderByDescending(x => x.TotalScore).ToList();
+            
+            for (int i = 0; i < orderedScores.Count(); i++)
             {
-                lbScores.Items.Insert(0, score.Value.PlayerScoreString());
+                lbScores.Items.Insert(i, orderedScores[i].PlayerScoreString());
             }
         }
 
@@ -91,8 +93,6 @@ namespace ForageBuddy
             _playerScores = null;
             lbScores.Items.Clear();
             _filesInScreenshotDirectory = GetPngFiles();
-
-            // Resets the scores since the last forage. 
         }
 
         private List<string> GetPngFiles()
