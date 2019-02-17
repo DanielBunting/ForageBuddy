@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChestGrouping.cs" />
+    <Compile Include="ChestType.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
