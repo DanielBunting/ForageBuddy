@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ForageBuddy
@@ -23,57 +18,56 @@ namespace ForageBuddy
         {
             _imageParser = new ImageParser();
             InitializeComponent();
-
+            lbScores.Items.Insert(0, "Please Specify Screenshot folder");
         }
 
         private void btnFolderSelect_Click(object sender, EventArgs e)
         {
-            // TODO: Gracefully show if the client is connected properly.
+            if (fbdScreenieFolder.ShowDialog() != DialogResult.OK) return;
+            
+            Console.WriteLine(fbdScreenieFolder.SelectedPath);
+            _folderPath = fbdScreenieFolder.SelectedPath;
+            _filesInScreenshotDirectory = GetPngFiles();
 
-            if (fbdScreenieFolder.ShowDialog() == DialogResult.OK)
-            {
-                Console.WriteLine(fbdScreenieFolder.SelectedPath);
-                _folderPath = fbdScreenieFolder.SelectedPath;
-                _filesInScreenshotDirectory = GetPngFiles();
-            }
+            lbScores.Items.Clear();
+            lbScores.Items.Insert(0, "Ready");
         }
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
+            if (_folderPath == null)
+            {
+                MessageBox.Show("Screenshot output folder not set.");
+                return;
+            }
+
             lbScores.Items.Clear();
             _playerScores = new Dictionary<string, PlayerScore>();
-
-            if (_folderPath == null) return;
 
             var allFilesInOutputDir = GetPngFiles();
 
             var tmpPlayerScores = new List<PlayerScore>();
 
-            foreach (var file in allFilesInOutputDir)
+            foreach (var file in allFilesInOutputDir.Where(x => !_filesInScreenshotDirectory.Contains(x)))
             {
-                if (_filesInScreenshotDirectory.Contains(file))
-                {
-                    Console.WriteLine($@"File {file} already found. Continuing.");
-                    continue;
-                }
-
                 tmpPlayerScores.AddRange(_imageParser.GetPlayerScoresInImage(file));
             }
 
             foreach (var score in tmpPlayerScores)
             {
                 if (!_playerScores.ContainsKey(score.PlayerName)) _playerScores.Add(score.PlayerName, score);
+                
                 if (score.TotalScore > _playerScores[score.PlayerName].TotalScore)
                 {
                     _playerScores[score.PlayerName] = score;
                 }
             }
 
-            var orderedScores = _playerScores.Select(x => x.Value).OrderByDescending(x => x.TotalScore).ToList();
+            var orderedScores = _playerScores.Select(x => x.Value).OrderBy(x => x.TotalScore).ToList();
             
-            for (int i = 0; i < orderedScores.Count(); i++)
+            foreach(var score in orderedScores)
             {
-                lbScores.Items.Insert(i, orderedScores[i].PlayerScoreString());
+                lbScores.Items.Insert(0, score.PlayerScoreString());
             }
         }
 
@@ -93,6 +87,7 @@ namespace ForageBuddy
 
             _playerScores = null;
             lbScores.Items.Clear();
+            lbScores.Items.Insert(0,"Ready");
             _filesInScreenshotDirectory = GetPngFiles();
         }
 

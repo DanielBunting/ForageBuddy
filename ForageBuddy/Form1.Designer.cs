@@ -38,12 +38,13 @@
             // 
             // btnFolderSelect
             // 
+            this.btnFolderSelect.BackColor = System.Drawing.SystemColors.Control;
             this.btnFolderSelect.Location = new System.Drawing.Point(12, 12);
             this.btnFolderSelect.Name = "btnFolderSelect";
             this.btnFolderSelect.Size = new System.Drawing.Size(75, 42);
             this.btnFolderSelect.TabIndex = 0;
-            this.btnFolderSelect.Text = "Output Folder";
-            this.btnFolderSelect.UseVisualStyleBackColor = true;
+            this.btnFolderSelect.Text = "Screenshot Folder";
+            this.btnFolderSelect.UseVisualStyleBackColor = false;
             this.btnFolderSelect.Click += new System.EventHandler(this.btnFolderSelect_Click);
             // 
             // btnCalculate
@@ -61,8 +62,8 @@
             this.lbScores.FormattingEnabled = true;
             this.lbScores.Location = new System.Drawing.Point(93, 12);
             this.lbScores.Name = "lbScores";
-            this.lbScores.Size = new System.Drawing.Size(126, 186);
-            this.lbScores.TabIndex = 2;
+            this.lbScores.Size = new System.Drawing.Size(184, 186);
+            this.lbScores.TabIndex = 4;
             // 
             // btnCopyScores
             // 
@@ -70,7 +71,7 @@
             this.btnCopyScores.Name = "btnCopyScores";
             this.btnCopyScores.Size = new System.Drawing.Size(75, 42);
             this.btnCopyScores.TabIndex = 3;
-            this.btnCopyScores.Text = "Copy Scores";
+            this.btnCopyScores.Text = "Copy To Clipboard";
             this.btnCopyScores.UseVisualStyleBackColor = true;
             this.btnCopyScores.Click += new System.EventHandler(this.btnCopyScores_Click);
             // 
@@ -79,8 +80,8 @@
             this.btnReset.Location = new System.Drawing.Point(12, 108);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 42);
-            this.btnReset.TabIndex = 4;
-            this.btnReset.Text = "Clear Scores";
+            this.btnReset.TabIndex = 2;
+            this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
@@ -88,13 +89,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(231, 210);
+            this.ClientSize = new System.Drawing.Size(289, 210);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnCopyScores);
             this.Controls.Add(this.lbScores);
             this.Controls.Add(this.btnCalculate);
             this.Controls.Add(this.btnFolderSelect);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.Opacity = 0.9D;
+            this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Forage Buddy";
             this.ResumeLayout(false);
 
