@@ -79,9 +79,10 @@ namespace ForageBuddy
 
         private void btnCopyScores_Click(object sender, EventArgs e)
         {
-            if (_playerScores == null) return;
+            if (_playerScores == null || _playerScores.Count == 0) return;
 
-            var output = string.Join("\n", _playerScores.Values.Select(x => x.PlayerScoreString()));
+            var orderedScores = _playerScores.Select(x => x.Value).OrderByDescending(x => x.TotalScore).ToList().Select(x => x.PlayerScoreString());
+            var output = string.Join("\n", orderedScores);
 
             Clipboard.SetText(output);
         }
