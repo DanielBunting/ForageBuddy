@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tesseract;
 
 namespace ForageBuddy
 {
@@ -37,13 +30,15 @@ namespace ForageBuddy
 
         private List<ChestGrouping> _chestGroups = new List<ChestGrouping>();
 
+        private Bitmap _bitmapImage;
+        
         private int _maxHeight = 0;
 
         public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile)
         {
-            var bitmapImage = new Bitmap(pathToFile);
+            _bitmapImage = new Bitmap(pathToFile);
 
-            var lockedBitmapImage = new LockedBitmap(bitmapImage);
+            var lockedBitmapImage = new LockedBitmap(_bitmapImage);
 
             lockedBitmapImage.LockBits();
             
@@ -77,17 +72,15 @@ namespace ForageBuddy
             {
                 GroupChests(ChestType.CursedChest, cursedChestLocation);
             }
-
-            var result = new List<PlayerScore>();
-
-            foreach (var chestGroup in _chestGroups)
-            {
-                var location = new Point(chestGroup.GroupLocation.X + 8, chestGroup.GroupLocation.Y - 45);
-                var name = NameReader.ReadDutyReportName(bitmapImage.Clone(new Rectangle(location, new Size(80, 20)), bitmapImage.PixelFormat));
-                result.Add(new PlayerScore(name, chestGroup.BoneBox, chestGroup.FetishJar, chestGroup.CursedChest));
-            }
-
-            return result;
+            
+            return _chestGroups
+                .AsParallel()
+                .Select(x =>
+                    new PlayerScore(NameReader.ReadDutyReportName(x.NameSector), 
+                        x.BoneBox, 
+                        x.FetishJar, 
+                        x.CursedChest))
+                .ToList();
         }
 
         private void GroupChests(ChestType chestType, Point chestLocation)
@@ -100,7 +93,10 @@ namespace ForageBuddy
             if(matchingGroup != null)
                 matchingGroup.AddChest(chestType, chestLocation);
             else
-                _chestGroups.Add(new ChestGrouping(chestType, chestLocation));
+                _chestGroups.Add(new ChestGrouping(
+                    chestType, 
+                    chestLocation, 
+                    _bitmapImage.Clone(new Rectangle(new Point(chestLocation.X + 8, chestLocation.Y - 45), new Size(80, 20)), _bitmapImage.PixelFormat)));
         }
 
         public void Dispose()
