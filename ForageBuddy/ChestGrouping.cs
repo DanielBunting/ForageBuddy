@@ -8,11 +8,13 @@ namespace ForageBuddy
         public int CursedChest { get; private set; } = 0;
         public int FetishJar { get; private set; } = 0;
         public int BoneBox { get; private set; } = 0;
+        public Bitmap NameSector { get; private set; }
 
-        public ChestGrouping(ChestType initialChest, Point groupLocation)
+        public ChestGrouping(ChestType initialChest, Point groupLocation, Bitmap nameSector)
         {
             this.GroupLocation = groupLocation;
             this.AddChest(initialChest, groupLocation);
+            this.NameSector = nameSector;
         }
 
         public void AddChest(ChestType typeOfChest, Point chestLocation)
