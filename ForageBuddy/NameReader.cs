@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using Serilog;
 using Tesseract;
 
 namespace ForageBuddy
@@ -9,11 +10,20 @@ namespace ForageBuddy
     {
         private const int DutyReportScalar = 8;
 
-        public static string ReadDutyReportName(Bitmap image)
-        => new TesseractEngine("./tessdata", "eng", EngineMode.Default) { DefaultPageSegMode = PageSegMode.SingleWord }
-            .Process(ResizeImage(image, image.Width * DutyReportScalar, image.Height * DutyReportScalar))
-            .GetText()
-            .Replace("\n", "");
+        public static string ReadDutyReportName(Bitmap image, ILogger logger)
+        {
+            var ocrPage = new TesseractEngine("./tessdata", "eng", EngineMode.Default)
+                    {DefaultPageSegMode = PageSegMode.SingleWord}
+                .Process(ResizeImage(image, image.Width * DutyReportScalar, image.Height * DutyReportScalar));
+            
+            var name = ocrPage
+                .GetText()
+                .Replace("\n", "");
+            
+            logger.Information($"OCR reading: {name} with {ocrPage.GetMeanConfidence()*100}% confidence");
+
+            return name;
+        }
 
         private static Bitmap ResizeImage(Image image, int width, int height)
         {
