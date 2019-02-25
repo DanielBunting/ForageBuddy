@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Serilog;
 
 namespace ForageBuddy
 {
@@ -34,26 +35,38 @@ namespace ForageBuddy
         
         private int _maxHeight = 0;
 
-        public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile)
+        private ILogger _logger;
+
+        public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile, ILogger logger)
         {
+            _logger = logger;
+            
             _bitmapImage = new Bitmap(pathToFile);
+            
+            _logger.Information($"Reading from new bitmap found at {pathToFile}");
 
             var lockedBitmapImage = new LockedBitmap(_bitmapImage);
 
             lockedBitmapImage.LockBits();
-            
-            // TODO: Implement an earlier check to see if in the Forage puzzle.
 
-            if(lockedBitmapImage.DoesImageExist(_bottomOfForageLegend))
+            if (lockedBitmapImage.DoesImageExist(_bottomOfForageLegend))
                 _maxHeight = lockedBitmapImage.GetFirstLocation(_bottomOfForageLegend).Y;
             else if (lockedBitmapImage.DoesImageExist(_topOfDutyReport))
                 _maxHeight = lockedBitmapImage.GetFirstLocation(_topOfDutyReport).Y;
-            else return new List<PlayerScore>();
+            else
+            {
+                _logger.Information($"No duty report found.");
+                return new List<PlayerScore>();
+            }
+            
+            _logger.Information($"Top of search area set to {_maxHeight}");
 
             var cursedChestLocations = lockedBitmapImage.GetAllOccurences(_cursedChest).ToList();
             var fetishJarLocations = lockedBitmapImage.GetAllOccurences(_fetishJar).ToList();
             var boneBoxLocations = lockedBitmapImage.GetAllOccurences(_boneBox).ToList();
 
+            _logger.Information($"Chests found: Bone Boxes - {boneBoxLocations.Count}, Fetish Jars -  {fetishJarLocations.Count}, Cursed Chests - {cursedChestLocations.Count}");
+            
             lockedBitmapImage.UnlockBits();
 
             _chestGroups = new List<ChestGrouping>();
@@ -76,7 +89,7 @@ namespace ForageBuddy
             return _chestGroups
                 .AsParallel()
                 .Select(x =>
-                    new PlayerScore(NameReader.ReadDutyReportName(x.NameSector), 
+                    new PlayerScore(NameReader.ReadDutyReportName(x.NameSector, _logger), 
                         x.BoneBox, 
                         x.FetishJar, 
                         x.CursedChest))
