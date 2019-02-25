@@ -86,7 +86,7 @@ namespace ForageBuddy
                 }
                 else if (score.TotalScore > _playerScores[score.PlayerName].TotalScore)
                 {
-                    _logger.Information($"Updated: {_playerScores[score.PlayerName]} --> {score.PlayerScoreStringBreakdown()}");
+                    _logger.Information($"Updated: {_playerScores[score.PlayerName].PlayerScoreStringBreakdown()} --> {score.PlayerScoreStringBreakdown()}");
                     _playerScores[score.PlayerName] = score;
                 }
             }
