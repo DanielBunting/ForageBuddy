@@ -40,11 +40,10 @@ namespace ForageBuddy
         public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile, ILogger logger)
         {
             _logger = logger;
-            var spacing = "    ";
             
             _bitmapImage = new Bitmap(pathToFile);
             
-            _logger.Information(spacing + $"Reading from bitmap found at {pathToFile}");
+            _logger.Information($"Reading from new bitmap found at {pathToFile}");
 
             var lockedBitmapImage = new LockedBitmap(_bitmapImage);
 
@@ -56,17 +55,17 @@ namespace ForageBuddy
                 _maxHeight = lockedBitmapImage.GetFirstLocation(_topOfDutyReport).Y;
             else
             {
-                _logger.Information(spacing + $"No duty report found - returning.");
+                _logger.Information($"No duty report found.");
                 return new List<PlayerScore>();
             }
             
-            _logger.Information(spacing + $"Top of search area set to {_maxHeight}");
+            _logger.Information($"Top of search area set to {_maxHeight}");
 
             var cursedChestLocations = lockedBitmapImage.GetAllOccurences(_cursedChest).ToList();
             var fetishJarLocations = lockedBitmapImage.GetAllOccurences(_fetishJar).ToList();
             var boneBoxLocations = lockedBitmapImage.GetAllOccurences(_boneBox).ToList();
 
-            _logger.Information(spacing + $"Chests found: Bone Boxes - {boneBoxLocations.Count}, Fetish Jars -  {fetishJarLocations.Count}, Cursed Chests - {cursedChestLocations.Count}");
+            _logger.Information($"Chests found: Bone Boxes - {boneBoxLocations.Count}, Fetish Jars -  {fetishJarLocations.Count}, Cursed Chests - {cursedChestLocations.Count}");
             
             lockedBitmapImage.UnlockBits();
 
