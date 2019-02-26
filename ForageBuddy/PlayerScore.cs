@@ -5,27 +5,27 @@
         public string PlayerName { get; }
         public int TotalScore { get; }
 
-        private readonly int _totalOneChests;
-        private readonly int _totalTwoChests;
-        private readonly int _totalThreeChests;
+        private readonly int _totalBoneBoxes;
+        private readonly int _totalFetishJars;
+        private readonly int _totalCursedChests;
 
-        public PlayerScore(string playerName, int totalOneChests, int totalTwoChests, int totalThreeChests)
+        public PlayerScore(string playerName, int totalBoneBoxes, int totalFetishJars, int totalCursedChests)
         {
             PlayerName = playerName;
-            _totalOneChests = totalOneChests;
-            _totalTwoChests = totalTwoChests;
-            _totalThreeChests = totalThreeChests;
-            TotalScore = (totalOneChests) + (totalTwoChests * 2) + (totalThreeChests * 3);
+            _totalBoneBoxes = totalBoneBoxes;
+            _totalFetishJars = totalFetishJars;
+            _totalCursedChests = totalCursedChests;
+            TotalScore = (totalBoneBoxes) + (totalFetishJars * 2) + (totalCursedChests * 3);
         }
 
         public string PlayerScoreString()
         {
-            return $"{PlayerName} - {(_totalOneChests*1) + (_totalTwoChests*2) + (_totalThreeChests*3)}";
+            return $"{PlayerName} - {(_totalBoneBoxes*1) + (_totalFetishJars*2) + (_totalCursedChests*3)}";
         }
 
         public string PlayerScoreStringBreakdown()
         {
-            return $"{PlayerName} - {_totalOneChests}, {_totalTwoChests}, {_totalThreeChests}";
+            return $"{PlayerName} - {_totalBoneBoxes}, {_totalFetishJars}, {_totalCursedChests}";
         }
     }
 }
