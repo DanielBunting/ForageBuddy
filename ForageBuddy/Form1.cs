@@ -44,6 +44,7 @@ namespace ForageBuddy
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             var scores = _forageCalculator.CalculateScores();
+            _forageCalculator.ResetCalculator();
             
             lbScores.Items.Clear();
             
@@ -59,6 +60,7 @@ namespace ForageBuddy
 
         private void btnReset_Click(object sender, EventArgs e)
         {
+            lbScores.Items.Clear();
             _forageCalculator.ResetCalculator();
         }
     }
