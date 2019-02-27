@@ -60,12 +60,15 @@
   <ItemGroup>
     <Compile Include="ChestGrouping.cs" />
     <Compile Include="ChestType.cs" />
+    <Compile Include="ForageCalculator.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="IForageCalculator.cs" />
+    <Compile Include="IImageParser.cs" />
     <Compile Include="ImageParser.cs" />
     <Compile Include="LockedBitmap.cs" />
     <Compile Include="LockedImageSearch.cs" />

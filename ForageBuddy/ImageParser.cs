@@ -6,12 +6,12 @@ using Serilog;
 
 namespace ForageBuddy
 {
-    // TODO: Clean up this class and break it up. 
-
-    public class ImageParser : IDisposable
+    public class ImageParser : IImageParser, IDisposable
     {
-        public ImageParser()
+        public ImageParser(ILogger logger)
         {
+            _logger = logger;
+            
             _topOfDutyReport.LockBits();
             _bottomOfForageLegend.LockBits();
             _bottomOfDutyReport.LockBits();
@@ -35,12 +35,10 @@ namespace ForageBuddy
         
         private int _maxHeight = 0;
 
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
-        public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile, ILogger logger)
+        public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile)
         {
-            _logger = logger;
-            
             _bitmapImage = new Bitmap(pathToFile);
             
             _logger.Information($"Reading from new bitmap found at {pathToFile}");
