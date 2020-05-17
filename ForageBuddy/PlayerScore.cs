@@ -5,6 +5,8 @@
         public string PlayerName { get; }
         public int TotalScore { get; }
 
+        public int CursedChestScore { get => _totalCursedChests; }
+
         private readonly int _totalBoneBoxes;
         private readonly int _totalFetishJars;
         private readonly int _totalCursedChests;
@@ -20,7 +22,7 @@
 
         public string PlayerScoreString()
         {
-            return $"{PlayerName} - {(_totalBoneBoxes*1) + (_totalFetishJars*2) + (_totalCursedChests*3)}";
+            return $"{PlayerName} - {(_totalBoneBoxes*1) + (_totalFetishJars*2) + (_totalCursedChests*3)} ({_totalCursedChests})";
         }
 
         public string PlayerScoreStringBreakdown()

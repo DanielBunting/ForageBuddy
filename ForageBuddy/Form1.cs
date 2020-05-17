@@ -54,14 +54,28 @@ namespace ForageBuddy
 
         private void btnCopyScores_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_forageCalculator.GetScoreString());   
-            _logger.Information($"Scores copied to clipboard: {_forageCalculator.GetScoreString()}");
+            var textValue = _forageCalculator.GetScoreString();
+            if (!string.IsNullOrEmpty(textValue))
+            {
+                Clipboard.SetText(textValue);
+                _logger.Information($"Scores copied to clipboard: {textValue}");
+            }
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
             lbScores.Items.Clear();
             _forageCalculator.ResetCalculator();
+        }
+
+        private void btnCcCounts_Click(object sender, EventArgs e)
+        {
+            var textValue = _forageCalculator.GetCursedChestScoreString();
+            if (!string.IsNullOrEmpty(textValue))
+            {
+                Clipboard.SetText(textValue);
+                _logger.Information($"Scores copied to clipboard: {textValue}");
+            }
         }
     }
 }

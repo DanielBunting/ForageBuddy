@@ -89,5 +89,13 @@ namespace ForageBuddy
             => Directory.EnumerateFiles(_folderPath)
                 .ToList()
                 .FindAll(x => x.Split('.').LastOrDefault() == "png");
+
+        public string GetCursedChestScoreString()
+        => _playerScores != null && _playerScores.Count > 0
+                ? string.Join("\n", _playerScores.Select(x => x.Value)
+                    .OrderByDescending(x => x.CursedChestScore)
+                    .ToList()
+                    .Select(x => x.PlayerScoreString()))
+                : string.Empty;
     }
 }
