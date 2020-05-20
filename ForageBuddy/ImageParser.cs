@@ -102,8 +102,8 @@ namespace ForageBuddy
                     chestType, 
                     chestLocation, 
                     _bitmapImage
-                        .Clone(new Rectangle(new Point(chestLocation.X + 8, chestLocation.Y - 45), 
-                            new Size(80, 20)), _bitmapImage.PixelFormat)));
+                        .Clone(new Rectangle(new Point(chestLocation.X + 3, chestLocation.Y - 45), 
+                            new Size(90, 20)), _bitmapImage.PixelFormat)));
         }
 
         public void Dispose()
