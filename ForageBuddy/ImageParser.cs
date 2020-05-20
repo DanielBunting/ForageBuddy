@@ -70,19 +70,13 @@ namespace ForageBuddy
             _chestGroups = new List<ChestGrouping>();
 
             foreach (var boneBoxLocation in boneBoxLocations)
-            {
                 GroupChests(ChestType.BoneBox, boneBoxLocation);
-            }
 
             foreach (var fetishJarLocation in fetishJarLocations)
-            {
                 GroupChests(ChestType.FetishJar, fetishJarLocation);
-            }
 
             foreach (var cursedChestLocation in cursedChestLocations)
-            {
                 GroupChests(ChestType.CursedChest, cursedChestLocation);
-            }
             
             return _chestGroups
                 .AsParallel()
@@ -107,7 +101,9 @@ namespace ForageBuddy
                 _chestGroups.Add(new ChestGrouping(
                     chestType, 
                     chestLocation, 
-                    _bitmapImage.Clone(new Rectangle(new Point(chestLocation.X + 8, chestLocation.Y - 45), new Size(80, 20)), _bitmapImage.PixelFormat)));
+                    _bitmapImage
+                        .Clone(new Rectangle(new Point(chestLocation.X + 8, chestLocation.Y - 45), 
+                            new Size(80, 20)), _bitmapImage.PixelFormat)));
         }
 
         public void Dispose()

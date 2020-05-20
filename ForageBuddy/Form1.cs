@@ -44,7 +44,6 @@ namespace ForageBuddy
         private void btnCalculate_Click(object sender, EventArgs e)
         {
             var scores = _forageCalculator.CalculateScores();
-            _forageCalculator.ResetCalculator();
             
             lbScores.Items.Clear();
             
@@ -70,7 +69,7 @@ namespace ForageBuddy
 
         private void btnCcCounts_Click(object sender, EventArgs e)
         {
-            var textValue = _forageCalculator.GetCursedChestScoreString();
+            var textValue = _forageCalculator.GetDetailedScoreString();
             if (!string.IsNullOrEmpty(textValue))
             {
                 Clipboard.SetText(textValue);

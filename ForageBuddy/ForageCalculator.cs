@@ -54,7 +54,7 @@ namespace ForageBuddy
                 }
                 else if (score.TotalScore > _playerScores[score.PlayerName].TotalScore)
                 {
-                    _logger.Information($"Updated: {_playerScores[score.PlayerName].PlayerScoreStringBreakdown()} --> {score.PlayerScoreStringBreakdown()}");
+                    _logger.Information($"Updated: {_playerScores[score.PlayerName].PlayerScoreStringBreakdown()} -> {score.PlayerScoreStringBreakdown()}");
                     _playerScores[score.PlayerName] = score;
                 }
             }
@@ -66,14 +66,6 @@ namespace ForageBuddy
                 .Select(x => x.PlayerScoreString())
                 .ToList();
         }
-
-        public string GetScoreString()
-        => _playerScores != null && _playerScores.Count > 0 
-                ? string.Join("\n",_playerScores.Select(x => x.Value)
-                    .OrderByDescending(x => x.TotalScore)
-                    .ToList()
-                    .Select(x => x.PlayerScoreString()))
-                : string.Empty;
 
         public void ResetCalculator()
         {
@@ -90,12 +82,20 @@ namespace ForageBuddy
                 .ToList()
                 .FindAll(x => x.Split('.').LastOrDefault() == "png");
 
-        public string GetCursedChestScoreString()
+        public string GetScoreString()
+        => _playerScores != null && _playerScores.Count > 0
+            ? string.Join("\n", _playerScores.Select(x => x.Value)
+                .OrderByDescending(x => x.TotalScore)
+                .ToList()
+                .Select(x => x.PlayerScoreString()))
+            : string.Empty;
+
+        public string GetDetailedScoreString()
         => _playerScores != null && _playerScores.Count > 0
                 ? string.Join("\n", _playerScores.Select(x => x.Value)
-                    .OrderByDescending(x => x.CursedChestScore)
+                    .OrderByDescending(x => x.TotalScore)
                     .ToList()
-                    .Select(x => x.PlayerScoreString()))
+                    .Select(x => x.PlayerDetailedScoreString()))
                 : string.Empty;
     }
 }

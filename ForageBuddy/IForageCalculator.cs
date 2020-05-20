@@ -11,7 +11,7 @@ namespace ForageBuddy
 
         string GetScoreString();
 
-        string GetCursedChestScoreString();
+        string GetDetailedScoreString();
 
         void ResetCalculator();
     }
