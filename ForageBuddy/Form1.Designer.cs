@@ -34,6 +34,7 @@
             this.lbScores = new System.Windows.Forms.ListBox();
             this.btnCopyScores = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.btnScorePerChest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnFolderSelect
@@ -62,7 +63,7 @@
             this.lbScores.FormattingEnabled = true;
             this.lbScores.Location = new System.Drawing.Point(93, 12);
             this.lbScores.Name = "lbScores";
-            this.lbScores.Size = new System.Drawing.Size(184, 186);
+            this.lbScores.Size = new System.Drawing.Size(184, 238);
             this.lbScores.TabIndex = 4;
             // 
             // btnCopyScores
@@ -85,11 +86,22 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // btnScorePerChest
+            // 
+            this.btnScorePerChest.Location = new System.Drawing.Point(12, 204);
+            this.btnScorePerChest.Name = "btnScorePerChest";
+            this.btnScorePerChest.Size = new System.Drawing.Size(75, 42);
+            this.btnScorePerChest.TabIndex = 5;
+            this.btnScorePerChest.Text = "Copy Score Detailed";
+            this.btnScorePerChest.UseVisualStyleBackColor = true;
+            this.btnScorePerChest.Click += new System.EventHandler(this.btnCcCounts_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 210);
+            this.ClientSize = new System.Drawing.Size(289, 255);
+            this.Controls.Add(this.btnScorePerChest);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnCopyScores);
             this.Controls.Add(this.lbScores);
@@ -114,6 +126,7 @@
         private System.Windows.Forms.ListBox lbScores;
         private System.Windows.Forms.Button btnCopyScores;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnScorePerChest;
     }
 }
 

@@ -19,13 +19,12 @@
         }
 
         public string PlayerScoreString()
-        {
-            return $"{PlayerName} - {(_totalBoneBoxes*1) + (_totalFetishJars*2) + (_totalCursedChests*3)}";
-        }
+        => $"{PlayerName} - {TotalScore}";
+
+        public string PlayerDetailedScoreString()
+        => $"{PlayerName} - {TotalScore} -> ({_totalBoneBoxes}, {_totalFetishJars}, {_totalCursedChests})";
 
         public string PlayerScoreStringBreakdown()
-        {
-            return $"{PlayerName} - {_totalBoneBoxes}, {_totalFetishJars}, {_totalCursedChests}";
-        }
+        => $"{PlayerName} - {_totalBoneBoxes}, {_totalFetishJars}, {_totalCursedChests}";
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Serilog;
 
@@ -33,7 +30,7 @@ namespace ForageBuddy
                 Directory.CreateDirectory(logFolder);
             
             return new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(logFolder, "log.txt"))
+                .WriteTo.File(Path.Combine(logFolder, $"ForageBuddy_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_log.txt"))
                 .CreateLogger();
         }
 

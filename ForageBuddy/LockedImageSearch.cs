@@ -112,9 +112,7 @@ namespace ForageBuddy
             var pointsFound = new List<Point>();
             
             foreach (var lockedNeedle in lockedNeedles)
-            {
                 pointsFound.AddRange(GetAllOccurences(lockedNeedle, lockedHaystack));
-            }
 
             return pointsFound;
         }
