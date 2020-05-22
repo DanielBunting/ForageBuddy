@@ -12,11 +12,11 @@ namespace ForageBuddy
     {
         private const int DutyReportScalar = 4;
 
-        private const int BrigtnessThreshold = 100;
+        private const int BrightnessThreshold = 100;
 
         public static string ReadDutyReportName(Bitmap image, ILogger logger)
         {
-            image = image.ToBinaryImage();
+            image.ToBinaryImage();
 
             var transformedImage = TransformImage(image, image.Width * DutyReportScalar, image.Height * DutyReportScalar);
 
@@ -52,23 +52,17 @@ namespace ForageBuddy
             return destImage;
         }
 
-        private static Bitmap ToBinaryImage(this Bitmap image)
+        private static void ToBinaryImage(this Bitmap image)
         {
-            Bitmap grayScale = new Bitmap(image.Width, image.Height);
-
-            for (int y = 0; y < grayScale.Height; y++)
-                for (int x = 0; x < grayScale.Width; x++)
-                {
-                    Color c = image.GetPixel(x, y);
-
-                    int gs = (int)(c.R * 0.3 + c.G * 0.59 + c.B * 0.11);
-
-                    if (gs > BrigtnessThreshold)
-                        grayScale.SetPixel(x, y, Color.White);
-                    else
-                        grayScale.SetPixel(x, y, Color.Black);
-                }
-            return grayScale;
+            for (int y = 0; y < image.Height; y++)
+                for (int x = 0; x < image.Width; x++)
+                    image.SetPixel(x, y, image.GetPixel(x, y)
+                        .ColourToBrightness() > BrightnessThreshold 
+                        ? Color.White 
+                        : Color.Black);
         }
+
+        private static int ColourToBrightness(this Color colour)
+        => (int)(colour.R * 0.3 + colour.G * 0.59 + colour.B * 0.11);
     }
 }
