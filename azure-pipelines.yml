@@ -31,3 +31,10 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+teps:
+– task: GithubRelease@0
+  displayName: ‘Create GitHub Release’
+  inputs:
+   githubConnection: DanielBunting
+   repositoryName: DanielBunting/ForageBuddy
