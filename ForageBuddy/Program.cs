@@ -14,20 +14,21 @@ namespace ForageBuddy
         [STAThread]
         static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            //Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var log = new LoggerConfiguration()
+            var logger = new LoggerConfiguration()
                 .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            ///Generate Host Builder and Register the Services for DI
             var builder = new HostBuilder()
                .ConfigureServices((hostContext, services) =>
                {
-                    services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-                    services.AddScoped<MainForm>();
+                   services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger, dispose: true));
+                   services.AddScoped<MainForm>();
+                   services.AddScoped<IForageCalculator, ForageCalculator>();
+                   services.AddScoped<IImageParser, ImageParser>();
                });
 
             var host = builder.Build();

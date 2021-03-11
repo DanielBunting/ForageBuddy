@@ -13,17 +13,19 @@ namespace ForageBuddy
 {
     public partial class MainForm : Form
     {
-        public MainForm(ILogger<MainForm> logger)
+        private ILogger<MainForm> _logger;
+        private readonly IForageCalculator _forageCalculator;
+
+        public MainForm(ILogger<MainForm> logger, IForageCalculator forageCalculator)
         {
             InitializeComponent();
             _logger = logger;
+            _forageCalculator = forageCalculator;
         }
 
-        private ILogger<MainForm> _logger;
-
-        private void button1_Click(object sender, EventArgs e)
+        private void Run_Click(object sender, EventArgs e)
         {
-            _logger.LogInformation("Test");
+
         }
     }
 }

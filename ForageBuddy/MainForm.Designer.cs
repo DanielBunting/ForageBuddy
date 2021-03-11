@@ -29,25 +29,57 @@ namespace ForageBuddy
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.Scores = new System.Windows.Forms.ListBox();
+            this.Run = new System.Windows.Forms.Button();
+            this.ClientPicker = new System.Windows.Forms.ComboBox();
+            this.RefreshClients = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // Scores
             // 
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Scores.FormattingEnabled = true;
+            this.Scores.ItemHeight = 15;
+            this.Scores.Location = new System.Drawing.Point(12, 12);
+            this.Scores.Name = "Scores";
+            this.Scores.Size = new System.Drawing.Size(149, 169);
+            this.Scores.TabIndex = 0;
+            // 
+            // Run
+            // 
+            this.Run.Location = new System.Drawing.Point(167, 119);
+            this.Run.Name = "Run";
+            this.Run.Size = new System.Drawing.Size(121, 62);
+            this.Run.TabIndex = 1;
+            this.Run.Text = "Run (CTRL + R)";
+            this.Run.UseVisualStyleBackColor = true;
+            this.Run.Click += new System.EventHandler(this.Run_Click);
+            // 
+            // ClientPicker
+            // 
+            this.ClientPicker.FormattingEnabled = true;
+            this.ClientPicker.Location = new System.Drawing.Point(167, 12);
+            this.ClientPicker.Name = "ClientPicker";
+            this.ClientPicker.Size = new System.Drawing.Size(121, 23);
+            this.ClientPicker.TabIndex = 2;
+            // 
+            // RefreshClients
+            // 
+            this.RefreshClients.Location = new System.Drawing.Point(167, 41);
+            this.RefreshClients.Name = "RefreshClients";
+            this.RefreshClients.Size = new System.Drawing.Size(121, 26);
+            this.RefreshClients.TabIndex = 3;
+            this.RefreshClients.Text = "Refresh Client List";
+            this.RefreshClients.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(721, 450);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(296, 195);
+            this.Controls.Add(this.RefreshClients);
+            this.Controls.Add(this.ClientPicker);
+            this.Controls.Add(this.Run);
+            this.Controls.Add(this.Scores);
             this.Name = "MainForm";
             this.Text = "Forage Buddy";
             this.ResumeLayout(false);
@@ -56,7 +88,10 @@ namespace ForageBuddy
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListBox Scores;
+        private System.Windows.Forms.Button Run;
+        private System.Windows.Forms.ComboBox ClientPicker;
+        private System.Windows.Forms.Button RefreshClients;
     }
 }
 
