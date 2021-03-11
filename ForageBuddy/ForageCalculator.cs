@@ -1,23 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using LockedBitmapUtil.Extensions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ForageBuddy
 {
     class ForageCalculator : IForageCalculator
     {
-        // Capture the screen, using the client handle passed in. 
+        private readonly IImageParser _imageParser;
+        private readonly ILogger<ForageCalculator> _logger;
 
-        public List<string> CalculateScores()
+        public ForageCalculator(IImageParser imageParser, ILogger<ForageCalculator> logger)
         {
-            throw new NotImplementedException();
+            _imageParser = imageParser;
+            _logger = logger;
         }
 
-        public string GetScoreString()
+        public List<string> CalculateScores(IntPtr clientHandle)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Calculating scores..");
+            
+            var sceenshot = clientHandle
+                .CaptureWindow()
+                .ToLockedBitmap();
+
+            return _imageParser
+                .GetPlayerScoresInImage(sceenshot)
+                .OrderBy(x => x.TotalScore)
+                .Select(x => x.PlayerScoreString()).ToList();
         }
     }
 }

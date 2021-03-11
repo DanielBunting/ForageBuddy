@@ -61,6 +61,7 @@ namespace ForageBuddy
             this.ClientPicker.Name = "ClientPicker";
             this.ClientPicker.Size = new System.Drawing.Size(121, 23);
             this.ClientPicker.TabIndex = 2;
+            this.ClientPicker.SelectedIndexChanged += new System.EventHandler(this.ClientPicker_SelectedIndexChanged);
             // 
             // RefreshClients
             // 
@@ -70,6 +71,7 @@ namespace ForageBuddy
             this.RefreshClients.TabIndex = 3;
             this.RefreshClients.Text = "Refresh Client List";
             this.RefreshClients.UseVisualStyleBackColor = true;
+            this.RefreshClients.Click += new System.EventHandler(this.RefreshClients_Click);
             // 
             // MainForm
             // 

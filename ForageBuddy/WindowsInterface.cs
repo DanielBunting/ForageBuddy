@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ForageBuddy
 {
     public static class WindowsInterface
     {
-        // Add something that will give you the list of clients. 
+        public static IEnumerable<(string clientName, IntPtr clientHandle)> GetOpenPuzzlePiratesClients()
+        {
+            foreach (var process in Process.GetProcesses())
+                if (process.ProcessName.Contains("Puzzle Pirates -") &&
+                    process.ProcessName.Contains(" on the ") &&
+                    process.ProcessName.Contains("Ocean"))
+                    yield return (process.ProcessName, process.Handle);
+        }
     }
 }
