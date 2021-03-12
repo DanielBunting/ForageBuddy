@@ -9,20 +9,22 @@ namespace ForageBuddy
     class ForageCalculator : IForageCalculator
     {
         private readonly IImageParser _imageParser;
+        private readonly IScreenshotService _screenshotService;
         private readonly ILogger<ForageCalculator> _logger;
 
-        public ForageCalculator(IImageParser imageParser, ILogger<ForageCalculator> logger)
+        public ForageCalculator(IImageParser imageParser, IScreenshotService screenshotService, ILogger<ForageCalculator> logger)
         {
             _imageParser = imageParser;
+            _screenshotService = screenshotService;
             _logger = logger;
         }
 
         public List<string> CalculateScores(IntPtr clientHandle)
         {
             _logger.LogInformation("Calculating scores..");
-            
-            var sceenshot = clientHandle
-                .CaptureWindow()
+
+            var sceenshot = _screenshotService
+                .CaptureWindow(clientHandle)
                 .ToLockedBitmap();
 
             return _imageParser

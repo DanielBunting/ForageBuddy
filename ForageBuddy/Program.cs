@@ -14,7 +14,6 @@ namespace ForageBuddy
         [STAThread]
         static void Main()
         {
-            //Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -29,6 +28,8 @@ namespace ForageBuddy
                    services.AddScoped<MainForm>();
                    services.AddScoped<IForageCalculator, ForageCalculator>();
                    services.AddScoped<IImageParser, ImageParser>();
+                   services.AddScoped<IScreenshotService, ScreenshotService>();
+                   services.AddTransient<INameReader, NameReader>();
                });
 
             var host = builder.Build();

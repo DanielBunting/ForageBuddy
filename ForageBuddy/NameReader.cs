@@ -4,9 +4,9 @@ using Tesseract;
 
 namespace ForageBuddy
 {
-    public static class NameReader
+    public class NameReader : INameReader
     {
-        public static string ReadDutyReportName(Bitmap image)
+        public string ReadDutyReportName(Bitmap image)
         => new TesseractEngine("./tessdata", "eng", EngineMode.CubeOnly)
             { DefaultPageSegMode = PageSegMode.SingleWord }
             .Process(image.ToPix())

@@ -21,14 +21,23 @@ namespace ForageBuddy
             InitializeComponent();
             _logger = logger;
             _forageCalculator = forageCalculator;
+
+            PopulateClientPicker();
         }
 
         private void Run_Click(object sender, EventArgs e)
         {
+            ScoresOutput.Items.Clear();
             _logger.LogInformation("Running");
             var scores = _forageCalculator.CalculateScores(_selectedClient);
-
-            Clipboard.SetText(string.Join("\n", scores));
+            if (scores.Count > 0)
+            {
+                foreach (var score in scores)
+                    ScoresOutput.Items.Insert(0, score);
+                Clipboard.SetText(string.Join("\n", scores));
+            }
+            else
+                ScoresOutput.Items.Add("No scores found!");
         }
 
         private void RefreshClients_Click(object sender, EventArgs e)

@@ -20,9 +20,11 @@ namespace ForageBuddy
         private readonly LockedBitmap _cursedChest = new LockedBitmap(Properties.Resources.CursedChest);
         private readonly LockedBitmap _fetishJar = new LockedBitmap(Properties.Resources.FetishJar);
         private readonly LockedBitmap _boneBox = new LockedBitmap(Properties.Resources.BoneBox);
+
+        private readonly INameReader nameReader;
         private readonly ILogger<ImageParser> _logger;
 
-        public ImageParser(ILogger<ImageParser> logger)
+        public ImageParser(INameReader nameReader, ILogger<ImageParser> logger)
         {
             _topOfDutyReport.LockBits();
             _bottomOfForageLegend.LockBits();
@@ -31,6 +33,7 @@ namespace ForageBuddy
             _cursedChest.LockBits();
             _fetishJar.LockBits();
             _boneBox.LockBits();
+            this.nameReader = nameReader;
             _logger = logger;
         }
 
@@ -73,7 +76,7 @@ namespace ForageBuddy
             return _chestGroups
                 .AsParallel()
                 .Select(x =>
-                    new PlayerScore(NameReader.ReadDutyReportName(
+                    new PlayerScore(nameReader.ReadDutyReportName(
                         x.NameSector
                         .Resize(x.NameSector.Width * Scalar, x.NameSector.Height * Scalar)
                         .ToBinaryImage(100, Color.White, Color.Black)
