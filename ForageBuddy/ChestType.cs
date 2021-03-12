@@ -1,4 +1,4 @@
-namespace ForageBuddy
+﻿namespace ForageBuddy
 {
     public enum ChestType
     {

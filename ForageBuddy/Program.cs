@@ -1,41 +1,44 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
+using System.Windows.Forms;
 
 namespace ForageBuddy
 {
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            var logger = CreateLogger();
-            var imageParser = CreateImageParser(logger);
-            var forageCalculator = CreateForageCalculator(imageParser, logger);
-            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(forageCalculator, logger));
-        }
-        
-        private static ILogger CreateLogger()
-        {
-            var logFolder = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
-            
-            if (!Directory.Exists(logFolder))
-                Directory.CreateDirectory(logFolder);
-            
-            return new LoggerConfiguration()
-                .WriteTo.File(Path.Combine(logFolder, $"ForageBuddy_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_log.txt"))
+
+            var logger = new LoggerConfiguration()
+                .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+
+            var builder = new HostBuilder()
+               .ConfigureServices((hostContext, services) =>
+               {
+                   services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(logger, dispose: true));
+                   services.AddScoped<MainForm>();
+                   services.AddScoped<IForageCalculator, ForageCalculator>();
+                   services.AddScoped<IImageParser, ImageParser>();
+                   services.AddScoped<IScreenshotService, ScreenshotService>();
+                   services.AddTransient<INameReader, NameReader>();
+               });
+
+            var host = builder.Build();
+
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                Application.Run(services.GetRequiredService<MainForm>());
+            }
         }
-
-        private static IImageParser CreateImageParser(ILogger logger) => new ImageParser(logger);
-
-        private static IForageCalculator CreateForageCalculator(IImageParser imageParser, ILogger logger) => new ForageCalculator(imageParser, logger);
     }
 }

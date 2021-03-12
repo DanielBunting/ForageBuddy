@@ -1,6 +1,6 @@
 ﻿namespace ForageBuddy
 {
-    public class PlayerScore
+    public record PlayerScore
     {
         public string PlayerName { get; }
         public int TotalScore { get; }

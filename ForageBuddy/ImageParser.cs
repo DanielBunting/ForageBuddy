@@ -1,25 +1,17 @@
-﻿using System;
+﻿using LockedBitmapUtil;
+using LockedBitmapUtil.Extensions;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Serilog;
 
 namespace ForageBuddy
 {
-    public class ImageParser : IImageParser, IDisposable
+    public class ImageParser : IImageParser
     {
-        public ImageParser(ILogger logger)
-        {
-            _logger = logger;
-            
-            _topOfDutyReport.LockBits();
-            _bottomOfForageLegend.LockBits();
-            _bottomOfDutyReport.LockBits();
-
-            _cursedChest.LockBits();
-            _fetishJar.LockBits();
-            _boneBox.LockBits();
-        }
+        const int Scalar = 8;
+        const int BrightnessThreshold = 100;
 
         private readonly LockedBitmap _topOfDutyReport = new LockedBitmap(Properties.Resources.TopOfDutyReport);
         private readonly LockedBitmap _bottomOfForageLegend = new LockedBitmap(Properties.Resources.BottomOfForageLegend);
@@ -29,88 +21,86 @@ namespace ForageBuddy
         private readonly LockedBitmap _fetishJar = new LockedBitmap(Properties.Resources.FetishJar);
         private readonly LockedBitmap _boneBox = new LockedBitmap(Properties.Resources.BoneBox);
 
-        private List<ChestGrouping> _chestGroups = new List<ChestGrouping>();
+        private readonly INameReader nameReader;
+        private readonly ILogger<ImageParser> _logger;
 
-        private Bitmap _bitmapImage;
-        
+        public ImageParser(INameReader nameReader, ILogger<ImageParser> logger)
+        {
+            _topOfDutyReport.LockBits();
+            _bottomOfForageLegend.LockBits();
+            _bottomOfDutyReport.LockBits();
+
+            _cursedChest.LockBits();
+            _fetishJar.LockBits();
+            _boneBox.LockBits();
+            this.nameReader = nameReader;
+            _logger = logger;
+        }
+
         private int _maxHeight = 0;
 
-        private readonly ILogger _logger;
+        private List<ChestGrouping> _chestGroups = new List<ChestGrouping>();
 
-        public IEnumerable<PlayerScore> GetPlayerScoresInImage(string pathToFile)
+        public IEnumerable<PlayerScore> GetPlayerScoresInImage(LockedBitmap screenshot)
         {
-            _bitmapImage = new Bitmap(pathToFile);
-            
-            _logger.Information($"Reading from new bitmap found at {pathToFile}");
-
-            var lockedBitmapImage = new LockedBitmap(_bitmapImage);
-
-            lockedBitmapImage.LockBits();
-
-            if (lockedBitmapImage.DoesImageExist(_bottomOfForageLegend))
-                _maxHeight = lockedBitmapImage.GetFirstLocation(_bottomOfForageLegend).Y;
-            else if (lockedBitmapImage.DoesImageExist(_topOfDutyReport))
-                _maxHeight = lockedBitmapImage.GetFirstLocation(_topOfDutyReport).Y;
+            if (screenshot.DoesImageExist(_bottomOfForageLegend, out var bottomLocation))
+                _maxHeight = bottomLocation.Y;
+            else if (screenshot.DoesImageExist(_topOfDutyReport, out var topLocation))
+                _maxHeight = topLocation.Y;
             else
             {
-                _logger.Information($"No duty report found.");
+                _logger.LogWarning($"No duty report found.");
                 return new List<PlayerScore>();
             }
-            
-            _logger.Information($"Top of search area set to {_maxHeight}");
 
-            var cursedChestLocations = lockedBitmapImage.GetAllOccurences(_cursedChest).ToList();
-            var fetishJarLocations = lockedBitmapImage.GetAllOccurences(_fetishJar).ToList();
-            var boneBoxLocations = lockedBitmapImage.GetAllOccurences(_boneBox).ToList();
+            _logger.LogInformation($"Top of search area set to {_maxHeight}");
 
-            _logger.Information($"Chests found: Bone Boxes - {boneBoxLocations.Count}, Fetish Jars -  {fetishJarLocations.Count}, Cursed Chests - {cursedChestLocations.Count}");
-            
-            lockedBitmapImage.UnlockBits();
+            var cursedChestLocations = screenshot.GetAllOccurences(_cursedChest).ToList();
+            var fetishJarLocations = screenshot.GetAllOccurences(_fetishJar).ToList();
+            var boneBoxLocations = screenshot.GetAllOccurences(_boneBox).ToList();
+
+            _logger.LogInformation($"Chests found: Bone Boxes - {boneBoxLocations.Count} "  
+                + $", Fetish Jars -  {fetishJarLocations.Count}, Cursed Chests - {cursedChestLocations.Count}");
 
             _chestGroups = new List<ChestGrouping>();
 
             foreach (var boneBoxLocation in boneBoxLocations)
-                GroupChests(ChestType.BoneBox, boneBoxLocation);
+                GroupChests(ChestType.BoneBox, boneBoxLocation, screenshot);
 
             foreach (var fetishJarLocation in fetishJarLocations)
-                GroupChests(ChestType.FetishJar, fetishJarLocation);
+                GroupChests(ChestType.FetishJar, fetishJarLocation, screenshot);
 
             foreach (var cursedChestLocation in cursedChestLocations)
-                GroupChests(ChestType.CursedChest, cursedChestLocation);
-            
+                GroupChests(ChestType.CursedChest, cursedChestLocation, screenshot);
+
             return _chestGroups
                 .AsParallel()
                 .Select(x =>
-                    new PlayerScore(NameReader.ReadDutyReportName(x.NameSector, _logger), 
-                        x.BoneBox, 
-                        x.FetishJar, 
+                    new PlayerScore(nameReader.ReadDutyReportName(
+                        x.NameSector
+                        .Resize(x.NameSector.Width * Scalar, x.NameSector.Height * Scalar)
+                        .ToBinaryImage(100, Color.White, Color.Black)
+                        .ToBitmap()),
+                        x.BoneBox,
+                        x.FetishJar,
                         x.CursedChest))
                 .ToList();
         }
 
-        private void GroupChests(ChestType chestType, Point chestLocation)
+        private void GroupChests(ChestType chestType, Point chestLocation, LockedBitmap screenshot)
         {
             if (chestLocation.Y < _maxHeight + 45) return;
 
             var matchingGroup = _chestGroups.FirstOrDefault(x =>
                 x.GroupLocation.Y < chestLocation.Y + 30 && x.GroupLocation.Y > chestLocation.Y - 30);
 
-            if(matchingGroup != null)
+            if (matchingGroup != null)
                 matchingGroup.AddChest(chestType, chestLocation);
             else
                 _chestGroups.Add(new ChestGrouping(
-                    chestType, 
-                    chestLocation, 
-                    _bitmapImage
-                        .Clone(new Rectangle(new Point(chestLocation.X + 3, chestLocation.Y - 45), 
-                            new Size(90, 20)), _bitmapImage.PixelFormat)));
-        }
-
-        public void Dispose()
-        {
-            _bottomOfDutyReport.UnlockBits();
-            _bottomOfForageLegend.UnlockBits();
-            _topOfDutyReport.UnlockBits();
+                    chestType,
+                    chestLocation,
+                    screenshot.Crop(chestLocation.Y + 3, chestLocation.Y - 45, 90, 20)));
         }
     }
 }

@@ -1,18 +1,11 @@
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ForageBuddy
 {
     public interface IForageCalculator
     {
-        void SetDirectory(string directory);
-
-        List<string> CalculateScores();
-
-        string GetScoreString();
-
-        string GetDetailedScoreString();
-
-        void ResetCalculator();
+        // This 'could/should' be async.
+        List<string> CalculateScores(IntPtr clientHandle);
     }
 }
