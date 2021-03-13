@@ -6,7 +6,6 @@ namespace ForageBuddy
 {
     public class ScreenshotService : IScreenshotService
     {
-        // TODO: This works for now, but should surely be a bit nicer...
         public Bitmap CaptureWindow(IntPtr handle)
         {
             IntPtr hdcSrc = User32.GetWindowDC(handle);

@@ -1,7 +1,6 @@
 ﻿using LockedBitmapUtil;
 using LockedBitmapUtil.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;

@@ -39,6 +39,7 @@ namespace ForageBuddy.Tests
         {
             foreach (var (image, expectedName) in _testImages)
             {
+                // Arange
                 var transformed = image
                     .ToLockedBitmap()
                     .Resize(image.Width * scalar, image.Height * scalar)

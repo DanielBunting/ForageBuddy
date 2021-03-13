@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ForageBuddy
 {
-    class ForageCalculator : IForageCalculator
+    public class ForageCalculator : IForageCalculator
     {
         private readonly IImageParser _imageParser;
         private readonly IScreenshotService _screenshotService;
