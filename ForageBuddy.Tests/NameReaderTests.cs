@@ -1,14 +1,13 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ForageBuddy;
+using Moq;
+using Microsoft.Extensions.Logging;
 
 namespace ForageBuddy.Tests
 {
     class NameReaderTests
     {
-        private NameReader _nameReader = new NameReader();
+        private NameReader _nameReader;
+        private Mock<ILogger<NameReader>> _logger;
 
         [SetUp]
         public void Setup()
