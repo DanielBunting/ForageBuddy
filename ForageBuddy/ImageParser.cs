@@ -79,7 +79,7 @@ namespace ForageBuddy
                     new PlayerScore(nameReader.ReadDutyReportName(
                         x.NameSector
                         .Resize(x.NameSector.Width * Scalar, x.NameSector.Height * Scalar)
-                        .ToBinaryImage(100, Color.White, Color.Black)
+                        .ToBinaryImage(BrightnessThreshold, Color.White, Color.Black)
                         .ToBitmap()),
                         x.BoneBox,
                         x.FetishJar,
