@@ -12,7 +12,7 @@ namespace ForageBuddy
                 if (process.MainWindowTitle.Contains("Puzzle Pirates -") &&
                     process.MainWindowTitle.Contains(" on the ") &&
                     process.MainWindowTitle.Contains("ocean"))
-                    yield return (process.MainWindowTitle.ToShortClientName(), process.Handle);
+                    yield return (process.MainWindowTitle.ToShortClientName(), process.MainWindowHandle);
         }
 
         private static string ToShortClientName(this string clientName)

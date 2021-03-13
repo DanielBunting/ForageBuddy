@@ -24,13 +24,19 @@ namespace ForageBuddy
             _logger.LogInformation("Calculating scores..");
 
             var sceenshot = _screenshotService
-                .CaptureWindow(clientHandle)
-                .ToLockedBitmap();
-
-            return _imageParser
-                .GetPlayerScoresInImage(sceenshot)
-                .OrderBy(x => x.TotalScore)
-                .Select(x => x.PlayerScoreString()).ToList();
+                    .CaptureWindow(clientHandle)
+                    .ToLockedBitmap();
+            try
+            {
+                return _imageParser
+                    .GetPlayerScoresInImage(sceenshot)
+                    .OrderBy(x => x.TotalScore)
+                    .Select(x => x.PlayerScoreString()).ToList();
+            }
+            finally
+            {
+                sceenshot.Dispose();
+            }
         }
     }
 }
