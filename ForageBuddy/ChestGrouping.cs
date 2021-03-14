@@ -13,9 +13,9 @@ namespace ForageBuddy
 
         public ChestGrouping(ChestType initialChest, Point groupLocation, LockedBitmap nameSector)
         {
-            this.GroupLocation = groupLocation;
-            this.AddChest(initialChest, groupLocation);
-            this.NameSector = nameSector;
+            GroupLocation = groupLocation;
+            AddChest(initialChest, groupLocation);
+            NameSector = nameSector;
         }
 
         public void AddChest(ChestType typeOfChest, Point chestLocation)
@@ -23,18 +23,18 @@ namespace ForageBuddy
             switch (typeOfChest)
             {
                 case ChestType.BoneBox:
-                    this.BoneBox++;
+                    BoneBox++;
                     break;
                 case ChestType.FetishJar:
-                    this.FetishJar++;
+                    FetishJar++;
                     break;
                 case ChestType.CursedChest:
-                    this.CursedChest++;
+                    CursedChest++;
                     break;
             }
 
-            if (chestLocation.Y < this.GroupLocation.Y) this.GroupLocation.Y = chestLocation.Y;
-            if (chestLocation.X < this.GroupLocation.X) this.GroupLocation.X = chestLocation.X;
+            if (chestLocation.Y < GroupLocation.Y) GroupLocation.Y = chestLocation.Y;
+            if (chestLocation.X < GroupLocation.X) GroupLocation.X = chestLocation.X;
         }
     }
 }

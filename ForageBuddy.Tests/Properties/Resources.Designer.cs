@@ -73,6 +73,46 @@ namespace ForageBuddy.Tests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NameReader_Dazeyinez_1 {
+            get {
+                object obj = ResourceManager.GetObject("NameReader_Dazeyinez_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Namereader_Dgkk_1 {
+            get {
+                object obj = ResourceManager.GetObject("Namereader_Dgkk_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NameReader_Dmentedangel_1 {
+            get {
+                object obj = ResourceManager.GetObject("NameReader_Dmentedangel_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NameReader_Hutisi_1 {
+            get {
+                object obj = ResourceManager.GetObject("NameReader_Hutisi_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NameReader_Jaxxa_1 {
             get {
                 object obj = ResourceManager.GetObject("NameReader_Jaxxa_1", resourceCulture);
@@ -93,9 +133,29 @@ namespace ForageBuddy.Tests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap NameReader_Shufti_1 {
+            get {
+                object obj = ResourceManager.GetObject("NameReader_Shufti_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NameReader_Theredwench_1 {
             get {
                 object obj = ResourceManager.GetObject("NameReader_Theredwench_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NameReader_Walkingout_1 {
+            get {
+                object obj = ResourceManager.GetObject("NameReader_Walkingout_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -38,6 +38,7 @@ namespace ForageBuddy
 
         private int _maxHeight = 0;
 
+        // TODO: Break this out to it's own service?
         private List<ChestGrouping> _chestGroups = new List<ChestGrouping>();
 
         public IEnumerable<PlayerScore> GetPlayerScoresInImage(LockedBitmap screenshot)
