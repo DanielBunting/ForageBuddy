@@ -15,7 +15,7 @@ namespace ForageBuddy.Tests
         private List<(Bitmap image, string expectedName)> _testImages;
 
         const int scalar = 8;
-        const int BrightnessThreshold = 100;
+        const int BrightnessThreshold = 105;
 
         [SetUp]
         public void Setup()
@@ -26,10 +26,16 @@ namespace ForageBuddy.Tests
             _testImages = new List<(Bitmap image, string expectedName)>()
             {
                 (Properties.Resources.NameReader_Annapurna_1, "Annapurna"),
+                (Properties.Resources.NameReader_Dazeyinez_1, "Dazeyinez"),
+                (Properties.Resources.NameReader_Dgkk_1, "Dgkk"),
+                (Properties.Resources.NameReader_Dmentedangel_1, "Dmentedangel"),
+                (Properties.Resources.NameReader_Hutisi_1, "Hutisi"),
                 (Properties.Resources.NameReader_Jaxxa_1, "Jaxxa"),
                 (Properties.Resources.NameReader_Raffaella_1, "Raffaella"),
+                //(Properties.Resources.NameReader_Shufti_1, "Shufti"), // TODO: Currently broken. 
                 //(Properties.Resources.NameReader_Theredwench_1, "Theredwench"), // TODO: Currently broken.
-                //(Properties.Resources.NameReader_Yeetmcskeet_1, "Yeetmcskeet")  // TODO: Currently broken
+                //(Properties.Resources.NameReader_Walkingout_1, "Walkingout"), // TODO: Currently broken. 
+                //(Properties.Resources.NameReader_Yeetmcskeet_1, "Yeetmcskeet")  // TODO: Currently broken - Fix word formating/capitalization. 
             };
         }
 

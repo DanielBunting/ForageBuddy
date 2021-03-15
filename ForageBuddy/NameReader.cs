@@ -20,7 +20,10 @@ namespace ForageBuddy
             { DefaultPageSegMode = PageSegMode.SingleWord }
               .Process(image.ToPix());
 
-            var name = predition.GetText().Replace("\n", "");
+            var name = predition.GetText()
+                .RemoveSpecialCharacters()
+                .ToTitleCase();
+
             var confidence = predition.GetMeanConfidence();
 
             _logger.LogInformation($"Predicted name of {name} with confidence of {confidence*100}%");

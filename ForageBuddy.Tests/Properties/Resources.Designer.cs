@@ -63,6 +63,16 @@ namespace ForageBuddy.Tests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ImageParser_EndToEndTest {
+            get {
+                object obj = ResourceManager.GetObject("ImageParser_EndToEndTest", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap NameReader_Annapurna_1 {
             get {
                 object obj = ResourceManager.GetObject("NameReader_Annapurna_1", resourceCulture);
@@ -83,9 +93,9 @@ namespace ForageBuddy.Tests.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Namereader_Dgkk_1 {
+        internal static System.Drawing.Bitmap NameReader_Dgkk_1 {
             get {
-                object obj = ResourceManager.GetObject("Namereader_Dgkk_1", resourceCulture);
+                object obj = ResourceManager.GetObject("NameReader_Dgkk_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

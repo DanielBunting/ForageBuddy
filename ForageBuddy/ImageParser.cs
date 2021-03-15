@@ -10,7 +10,7 @@ namespace ForageBuddy
     public class ImageParser : IImageParser
     {
         const int Scalar = 8;
-        const int BrightnessThreshold = 100;
+        const int BrightnessThreshold = 105;
 
         private readonly LockedBitmap _topOfDutyReport = new LockedBitmap(Properties.Resources.TopOfDutyReport);
         private readonly LockedBitmap _bottomOfForageLegend = new LockedBitmap(Properties.Resources.BottomOfForageLegend);
