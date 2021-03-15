@@ -18,7 +18,6 @@ namespace ForageBuddy.Tests
                 .ToLockedBitmap();
             _initialTopLeft = new Point(500, 500);
 
-
             _chestGrouping = new ChestGrouping(ChestType.BoneBox, _initialTopLeft, _lockedBitmap);
         }
 
