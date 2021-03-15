@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ForageBuddy
 {
-    class ForageCalculator : IForageCalculator
+    public class ForageCalculator : IForageCalculator
     {
         private readonly IImageParser _imageParser;
         private readonly IScreenshotService _screenshotService;
@@ -24,13 +24,19 @@ namespace ForageBuddy
             _logger.LogInformation("Calculating scores..");
 
             var sceenshot = _screenshotService
-                .CaptureWindow(clientHandle)
-                .ToLockedBitmap();
-
-            return _imageParser
-                .GetPlayerScoresInImage(sceenshot)
-                .OrderBy(x => x.TotalScore)
-                .Select(x => x.PlayerScoreString()).ToList();
+                    .CaptureWindow(clientHandle)
+                    .ToLockedBitmap();
+            try
+            {
+                return _imageParser
+                    .GetPlayerScoresInImage(sceenshot)
+                    .OrderBy(x => x.TotalScore)
+                    .Select(x => x.PlayerScoreString()).ToList();
+            }
+            finally
+            {
+                sceenshot.Dispose();
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using LockedBitmapUtil;
 using LockedBitmapUtil.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace ForageBuddy
     public class ImageParser : IImageParser
     {
         const int Scalar = 8;
-        const int BrightnessThreshold = 100;
+        const int BrightnessThreshold = 105;
 
         private readonly LockedBitmap _topOfDutyReport = new LockedBitmap(Properties.Resources.TopOfDutyReport);
         private readonly LockedBitmap _bottomOfForageLegend = new LockedBitmap(Properties.Resources.BottomOfForageLegend);
@@ -39,6 +38,7 @@ namespace ForageBuddy
 
         private int _maxHeight = 0;
 
+        // TODO: Break this out to it's own service?
         private List<ChestGrouping> _chestGroups = new List<ChestGrouping>();
 
         public IEnumerable<PlayerScore> GetPlayerScoresInImage(LockedBitmap screenshot)
@@ -79,7 +79,7 @@ namespace ForageBuddy
                     new PlayerScore(nameReader.ReadDutyReportName(
                         x.NameSector
                         .Resize(x.NameSector.Width * Scalar, x.NameSector.Height * Scalar)
-                        .ToBinaryImage(100, Color.White, Color.Black)
+                        .ToBinaryImage(BrightnessThreshold, Color.White, Color.Black)
                         .ToBitmap()),
                         x.BoneBox,
                         x.FetishJar,
